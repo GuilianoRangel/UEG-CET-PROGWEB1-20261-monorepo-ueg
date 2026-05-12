@@ -8,3 +8,4 @@ packages/utils/dist/*
 apps/frontend/.angular/cache/*
 apps/frontend/dist/*
 apps/backend/dist_test/*
+packages/utils/.turbo/
