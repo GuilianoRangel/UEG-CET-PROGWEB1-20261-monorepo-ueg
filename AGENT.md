@@ -1,0 +1,44 @@
+# Project AI Guidelines (AGENT.md)
+
+Este arquivo define as **Skills** e **Rules** que devem ser rigorosamente seguidas por qualquer agente de Inteligência Artificial (como o Antigravity) atuando neste monorepo. O objetivo é manter o padrão de código, a arquitetura e a consistência técnica do projeto de ponta a ponta.
+
+Antes de propor qualquer modificação ou iniciar uma implementação estrutural, o agente DEVE consultar as regras e os fluxos descritos na pasta `.agents`.
+
+## 📚 Rules (Regras do Projeto)
+As regras definem as diretrizes arquiteturais, padrões de código e convenções do monorepo. Elas estão localizadas no diretório `.agents/rules/`.
+
+- **[Regras Globais do Monorepo](.agents/rules/general.md)**
+  - Define o stack principal: Nest.js 11 (Backend), Angular 20+ (Frontend).
+  - Configurações do `pnpm workspaces` e Turborepo.
+  - Princípios mandatórios de Clean Code e Clean Architecture.
+  - Regras de compartilhamento de código (apenas em `packages/`) e formatação de commits (Conventional Commits).
+
+- **[Regras do Backend (NestJS)](.agents/rules/nestjs.md)**
+  - Padrões de injeção de dependência e divisão modular por domínio.
+  - Uso mandatório de DTOs (validados com class-validator) e tratamento global via `ExceptionFilter`.
+  - Exceções padronizadas, exigindo que regras de negócio disparem uma `BusinessException` que retorna erros HTTP formatados.
+
+- **[Regras do Frontend (Angular)](.agents/rules/angular.md)**
+  - Angular **Standalone Components** apenas (sem NgModules).
+  - Estilização exclusiva com **TailwindCSS** (v4) e controle de estado reativo via **Signals**.
+  - Componentização guiada por Container vs Presentational e padrões estritos de nomenclatura (`-list`, `-form`, `-detail`, etc).
+  - Exigência de prever tratamentos de UX (Loading, Erro, Vazio) em todas as telas.
+
+---
+
+## 🛠 Skills (Habilidades e Comportamentos do Agente)
+As skills definem as abordagens práticas na hora de codificar ou resolver problemas. O projeto implementa várias *Skills* em `.agents/skills/` que instruem como o agente deve agir nas implementações.
+
+As principais skills ativadas são:
+
+- **`angular-testing`**: Padrões de testes unitários e de integração para Angular, cobrindo componentes usando Signals, OnPush e HTTP Interactions.
+- **`nestjs-testing-expert` & `nestjs-best-practices`**: Melhores práticas arquiteturais em NestJS, junto de abordagens para manter boa cobertura de testes utilizando Jest.
+- **`tailwind-design-system` & `frontend-design`**: Foco em desenvolver interfaces premium, modernas e robustas, construindo design systems escaláveis com TailwindCSS.
+- **`clean-code`**: Escrever e refatorar "códigos que funcionam" para "códigos limpos".
+- **`ai-integration.md` / `new-feature.md`**: Fluxos engessados sobre como o agente deve abordar a construção de integrações ou de novas funcionalidades (exigindo **TDD** como passo inicial e obrigatório, tanto no Back quanto no Front).
+
+> [!IMPORTANT]  
+> **INSTRUÇÃO CRÍTICA PARA O AGENTE DE IA:**
+> 1. Toda e qualquer alteração de código ou sugestão DEVE respeitar estas restrições.
+> 2. Ao assumir uma nova tarefa complexa neste repositório, faça a leitura dos arquivos de regra para atualizar o seu contexto antes de gerar o plano de implementação.
+> 3. Use as *Skills* ativas (como design frontend de alta qualidade e TDD) a seu favor para alinhar suas entregas com a expectativa profissional do usuário.
