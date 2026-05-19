@@ -32,16 +32,16 @@ Este documento detalha as tarefas estruturadas para implementar a funcionalidade
 - [x] **Interceptors e Guards**:
   - Implementar `AuthInterceptor` para anexar o Bearer Token do JWT em cada requisição à API.
   - Implementar `AuthGuard` para bloquear navegação em rotas protegidas e redirecionar para a página de "Acesso Necessário" ou Login.
-- [ ] **Páginas / Componentes (Standalone, TailwindCSS v4, Design Premium)**:
+- [x] **Páginas / Componentes (Standalone, TailwindCSS v4, Design Premium)**:
   - [x] **Login**: Formulário validado. Comportamento para sessão expirada ou erro de inatividade (`AUTH_USER_INACTIVE`).
   - [x] **Cadastro**: Criar conta, alertando o usuário sobre a necessidade de ativação pelo administrador.
   - [x] **Esqueci minha senha**: Entrada simples e aviso genérico de sucesso visando segurança.
   - [x] **Nova Senha**: Tela que recebe via query params o token temporário.
   - [x] **Acesso Necessário / Erro de Autenticação**: Tela amigável exibida antes do redirecionamento para áreas protegidas.
-- [ ] **Layout Compartilhado**:
-  - [ ] **Header**: Atualizar via signal o estado exibindo o nome do usuário logado de forma reativa.
-- [ ] **Área Administrativa (Admin)**:
-  - [ ] **Listagem de Usuários**: Tabela/grid moderna com funcionalidades para "Ativar" um usuário e "Enviar Redefinição de Senha".
+- [x] **Layout Compartilhado**:
+  - [x] **Header**: Atualizar via signal o estado exibindo o nome do usuário logado de forma reativa.
+- [x] **Área Administrativa (Admin)**:
+  - [x] **Listagem de Usuários**: Tabela/grid moderna com funcionalidades para "Ativar" um usuário e "Enviar Redefinição de Senha".
 
 ## 3. Utilitários (Utilities)
 - [x] **Backend - Serviço de E-mail (SMTP)**: Utilitário isolado e integrável que consome variáveis de ambiente (Google SMTP) para disparo do link temporário.
@@ -54,7 +54,7 @@ Este documento detalha as tarefas estruturadas para implementar a funcionalidade
   - [x] **AuthService**: Mock do gerador de JWT e do comparador de Bcrypt; Testar fluxos de credencial incorreta, conta inativa, sucesso.
   - [x] **UsersService**: Cobertura das regras de negócio como prevenção de e-mail duplicado e validações de admin na aprovação/reset.
   - [x] **Utilitários**: Testar que utilitários de hash realmente retornam resultados mascarados.
-- [ ] **Frontend (Vitest / Jasmine + TestBed)**:
-  - [ ] **AuthService**: Utilizar `HttpTestingController` para simular as respostas do backend (200 OK ou 4xx).
-  - [ ] **Guards**: Testar se o guard corretamente barra a navegação e executa o redirecionamento (via `RouterTestingHarness`).
-  - [ ] **Componentes**: Focar na reatividade de formulários baseados em Signals, testando se os inputs disparam erros, e se as mensagens de feedback aparecem na DOM.
+- [x] **Frontend (Vitest / Jasmine + TestBed)**:
+  - [x] **AuthService**: Utilizar `HttpTestingController` para simular as respostas do backend (200 OK ou 4xx).
+  - [x] **Guards**: Testar se o guard corretamente barra a navegação e executa o redirecionamento (via `RouterTestingHarness`).
+  - [x] **Componentes**: Focar na reatividade de formulários baseados em Signals, testando se os inputs disparam erros, e se as mensagens de feedback aparecem na DOM.

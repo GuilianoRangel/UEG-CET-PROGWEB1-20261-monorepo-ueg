@@ -1,25 +1,35 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../app.module';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Role } from './entities/user.entity';
-import * as bcrypt from 'bcrypt';
 
-async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(AppModule);
-  const usersService = app.get(UsersService);
+@Injectable()
+export class SeedService implements OnModuleInit {
+  private readonly logger = new Logger(SeedService.name);
 
-  const adminEmail = 'admin@ueg.br';
-  const existingAdmin = await usersService.findByEmail(adminEmail);
+  constructor(private readonly usersService: UsersService) {}
 
-  if (!existingAdmin) {
-    // Cannot use create method directly as it sets role to USER and ativo to false
-    // we need to inject the repository or add a specific method.
-    // For simplicity, we can do it this way if we add a createAdmin method or modify create.
-    console.log('Admin não existe. Para criar o admin de forma correta, adicione um método de criação administrativa no UsersService.');
-  } else {
-    console.log('Admin já existe.');
+  async onModuleInit(): Promise<void> {
+    await this.seedAdmin();
   }
 
-  await app.close();
+  private async seedAdmin(): Promise<void> {
+    const adminEmail = 'admin@ueg.br';
+    const adminNome = 'Administrador';
+    const adminSenha = 'admin123';
+
+    const admin = await this.usersService.createAdmin(
+      adminEmail,
+      adminNome,
+      adminSenha,
+    );
+
+    const isNew = admin.createdAt.getTime() === admin.updatedAt.getTime();
+
+    if (isNew) {
+      this.logger.log(
+        `Usuário admin criado com sucesso (${adminEmail}). Altere a senha padrão!`,
+      );
+    } else {
+      this.logger.debug(`Usuário admin já existe (${adminEmail}). Seed ignorado.`);
+    }
+  }
 }
-bootstrap();

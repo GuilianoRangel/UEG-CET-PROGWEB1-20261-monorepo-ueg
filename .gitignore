@@ -9,3 +9,5 @@ apps/frontend/.angular/cache/*
 apps/frontend/dist/*
 apps/backend/dist_test/*
 packages/utils/.turbo/
+apps/backend/database.sqlite
+apps/backend/.env

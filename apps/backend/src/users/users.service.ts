@@ -63,4 +63,23 @@ export class UsersService {
     user.senha = novaSenhaHash;
     return this.userRepository.save(user);
   }
+
+  async createAdmin(email: string, nome: string, senha: string): Promise<User> {
+    const existing = await this.userRepository.findOne({ where: { email } });
+    if (existing) {
+      return existing;
+    }
+
+    const hashedPassword = await bcrypt.hash(senha, 10);
+
+    const admin = this.userRepository.create({
+      email,
+      nome,
+      senha: hashedPassword,
+      ativo: true,
+      role: Role.ADMIN,
+    });
+
+    return this.userRepository.save(admin);
+  }
 }

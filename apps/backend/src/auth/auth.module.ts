@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
@@ -11,7 +11,7 @@ import { RecoveryService } from './recovery.service';
 
 @Module({
   imports: [
-    UsersModule,
+    forwardRef(() => UsersModule),
     PassportModule,
     MailerModule,
     JwtModule.register({
@@ -21,6 +21,6 @@ import { RecoveryService } from './recovery.service';
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, RecoveryService],
-  exports: [AuthService],
+  exports: [AuthService, RecoveryService],
 })
 export class AuthModule {}

@@ -2,12 +2,14 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 export interface User {
   id: string;
   email: string;
   nome: string;
   role: string;
+  ativo?: boolean;
 }
 
 @Injectable({
@@ -17,7 +19,8 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   
-  private apiUrl = 'http://localhost:3000/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
+  private usersApiUrl = `${environment.apiUrl}/users`;
   
   // State using Signals
   private currentUserSignal = signal<User | null>(null);
@@ -77,5 +80,18 @@ export class AuthService {
     localStorage.removeItem('access_token');
     this.currentUserSignal.set(null);
     this.router.navigate(['/login']);
+  }
+
+  // Administrative methods
+  getUsers() {
+    return this.http.get<User[]>(this.usersApiUrl);
+  }
+
+  activateUser(id: string) {
+    return this.http.patch<User>(`${this.usersApiUrl}/${id}/activate`, {});
+  }
+
+  resetUserPassword(id: string) {
+    return this.http.post<{ message: string }>(`${this.usersApiUrl}/${id}/reset-password`, {});
   }
 }

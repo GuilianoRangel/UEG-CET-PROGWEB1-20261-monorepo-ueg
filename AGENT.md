@@ -2,7 +2,7 @@
 
 Este arquivo define as **Skills** e **Rules** que devem ser rigorosamente seguidas por qualquer agente de Inteligência Artificial (como o Antigravity) atuando neste monorepo. O objetivo é manter o padrão de código, a arquitetura e a consistência técnica do projeto de ponta a ponta.
 
-Antes de propor qualquer modificação ou iniciar uma implementação estrutural, o agente DEVE consultar as regras e os fluxos descritos na pasta `.agents`.
+Antes de propor qualquer modificação ou iniciar uma implementação estrutural, o agente DEVE consultar o documento de [Especificação Arquitetural](specs/arquitetura.md) assim como as regras e os fluxos descritos na pasta `.agents`.
 
 ## 📚 Rules (Regras do Projeto)
 As regras definem as diretrizes arquiteturais, padrões de código e convenções do monorepo. Elas estão localizadas no diretório `.agents/rules/`.
@@ -41,4 +41,8 @@ As principais skills ativadas são:
 > **INSTRUÇÃO CRÍTICA PARA O AGENTE DE IA:**
 > 1. Toda e qualquer alteração de código ou sugestão DEVE respeitar estas restrições.
 > 2. Ao assumir uma nova tarefa complexa neste repositório, faça a leitura dos arquivos de regra para atualizar o seu contexto antes de gerar o plano de implementação.
-> 3. Use as *Skills* ativas (como design frontend de alta qualidade e TDD) a seu favor para alinhar suas entregas com a expectativa profissional do usuário.
+> 3. **Planejamento de Ações**: Ao criar ou atualizar o plano de implementação (`implementation_plan.md`), o agente DEVE incluir explicitamente no planejamento quais **Skills** ativas deverão ser utilizadas na tarefa.
+> 4. **Ambiente de Execução (NVM)**: O agente DEVE sempre carregar explicitamente o NVM e a estrutura do pnpm do usuário para a execução de todos os comandos do terminal linux:
+>    `export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && export PNPM_HOME="/home/guiliano/.local/share/pnpm" && export PATH="$PNPM_HOME:$PATH" && <comando>`
+> 5. **Proibição Estrita do Tipo `any`**: O agente NÃO deve utilizar o tipo `any` no TypeScript em nenhuma assinatura, retorno, método ou variável do monorepo, a menos que seja explicitamente orientado pelo usuário a fazê-lo.
+> 6. Use as *Skills* ativas (como design frontend de alta qualidade e TDD) a seu favor para alinhar suas entregas com a expectativa profissional do usuário.

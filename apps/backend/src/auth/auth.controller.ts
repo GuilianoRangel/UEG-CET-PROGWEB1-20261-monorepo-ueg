@@ -1,4 +1,5 @@
 import { Controller, Post, UseGuards, Request, Body } from '@nestjs/common';
+import * as express from 'express';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { UsersService } from '../users/users.service';
@@ -6,6 +7,8 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { MailerService } from '../mailer/mailer.service';
 import { RecoveryService } from './recovery.service';
 import { BusinessException } from '../common/exceptions/business.exception';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { User } from '../users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -23,8 +26,11 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@Request() req: express.Request) {
+    if (!req.user) {
+      throw new BusinessException('Usuário não autenticado', 'AUTH_UNAUTHORIZED');
+    }
+    return this.authService.login(req.user as Omit<User, 'senha'>);
   }
 
   @Post('forgot-password')
@@ -39,8 +45,8 @@ export class AuthController {
   }
 
   @Post('reset-password')
-  async resetPassword(@Body() body: any) {
-    const { token, newPassword } = body;
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    const { token, newPassword } = resetPasswordDto;
     const email = this.recoveryService.validateToken(token);
     if (!email) {
       throw new BusinessException('Token inválido ou expirado', 'AUTH_INVALID_TOKEN');

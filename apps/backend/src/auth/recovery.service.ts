@@ -9,6 +9,10 @@ export class RecoveryService {
     const token = crypto.randomBytes(32).toString('hex');
     const expires = Date.now() + 1000 * 60 * 60; // 1 hora
     this.tokens.set(token, { email, expires });
+    //TODO remover depois de configurar o e-mali
+    console.log('Token de recuperação gerado:', token);
+    console.log('Email:', email);
+    console.log('Expires:', expires);
     return token;
   }
 
