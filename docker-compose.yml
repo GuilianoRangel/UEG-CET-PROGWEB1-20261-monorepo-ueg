@@ -31,8 +31,8 @@ services:
         - API_URL=${API_URL:-http://localhost:3000}
     container_name: ueg_frontend
     restart: always
-    ports:
-      - "80:80"
+    #ports:
+    #  - "80:80"
     depends_on:
       - backend
 
