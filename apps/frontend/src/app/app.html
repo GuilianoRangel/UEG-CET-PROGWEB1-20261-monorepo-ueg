@@ -1,5 +1,38 @@
-<app-header />
-<main
-  class="min-h-[calc(100vh-4rem)] bg-gray-950 text-white selection:bg-blue-500/35 selection:text-white flex flex-col justify-start">
-  <router-outlet />
-</main>
+@if (authService.isAuth()) {
+  <ui-shell>
+    <app-header (menuToggle)="toggleSidebar()"></app-header>
+    
+    <ui-sidebar [isOpen]="sidebarOpen()" (close)="closeSidebar()">
+      <div sidebar-header class="w-full flex items-center justify-between md:hidden">
+        <span class="font-bold text-primary">Menu</span>
+        <button (click)="closeSidebar()" class="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-md transition-colors">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <nav class="flex flex-col gap-1 px-4">
+        <a routerLink="/admin" routerLinkActive="bg-primary/10 text-primary font-medium" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          Início
+        </a>
+        <a href="javascript:void(0)" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground opacity-60 cursor-not-allowed">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+          Estágios (Em breve)
+        </a>
+      </nav>
+
+      <div sidebar-footer class="text-xs text-muted-foreground text-center">
+        Universidade Estadual de Goiás<br/>© 2026
+      </div>
+    </ui-sidebar>
+
+    <router-outlet></router-outlet>
+  </ui-shell>
+} @else {
+  <div class="flex flex-col min-h-screen bg-background transition-colors duration-200">
+    <app-header></app-header>
+    <main class="flex-1 relative flex flex-col">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+}

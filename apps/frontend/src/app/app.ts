@@ -1,16 +1,26 @@
-import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { HeaderComponent } from './core/components/header.component';
 import { AuthService } from './core/auth/auth.service';
-import { LoginComponent } from './pages/login/login.component';
-
+import { ShellComponent } from './shared/components/layout/shell.component';
+import { SidebarComponent } from './shared/components/layout/sidebar.component';
+import { ButtonComponent } from './shared/components/ui/button.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, LoginComponent],
+  imports: [RouterOutlet, HeaderComponent, ShellComponent, SidebarComponent, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   authService = inject(AuthService);
+  sidebarOpen = signal(false);
+
+  toggleSidebar() {
+    this.sidebarOpen.update(v => !v);
+  }
+
+  closeSidebar() {
+    this.sidebarOpen.set(false);
+  }
 }

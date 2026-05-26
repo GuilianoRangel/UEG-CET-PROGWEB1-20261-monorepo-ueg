@@ -21,6 +21,7 @@ As regras definem as diretrizes arquiteturais, padrões de código e convençõe
 - **[Regras do Frontend (Angular)](.agents/rules/angular.md)**
   - Angular **Standalone Components** apenas (sem NgModules).
   - Estilização exclusiva com **TailwindCSS** (v4) e controle de estado reativo via **Signals**.
+  - **MANDATÓRIO:** Toda construção ou refatoração de interface DEVE usar as especificações e componentes catalogados no **[Design System UEG](specs/design-system.md)** (`<ui-button>`, `<ui-card>`, etc). Fica proibido o uso de marcação HTML crua com estilos soltos que não obedeçam o Design System.
   - Componentização guiada por Container vs Presentational e padrões estritos de nomenclatura (`-list`, `-form`, `-detail`, etc).
   - Exigência de prever tratamentos de UX (Loading, Erro, Vazio) em todas as telas.
 

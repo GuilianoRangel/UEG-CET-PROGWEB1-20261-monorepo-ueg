@@ -1,4 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
@@ -14,9 +15,13 @@ import { RecoveryService } from './recovery.service';
     forwardRef(() => UsersModule),
     PassportModule,
     MailerModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || 'secretKey',
-      signOptions: { expiresIn: '60m' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'secretKey',
+        signOptions: { expiresIn: '60m' },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
