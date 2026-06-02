@@ -1,71 +1,51 @@
+---
+name: new-feature
+description: Fluxo de implementação técnica de novas funcionalidades usando TDD, exigindo planejamento prévio obrigatório.
+---
+
 # Skill: New Feature
 
-Quando solicitado a criar uma nova feature, sempre:
+Quando solicitado a implementar (codificar) uma nova feature, você DEVE atuar em conjunto com a skill de `implementation-planning` e seguir esta ordem rigorosamente:
 
-## 0. Validação inicial (OBRIGATÓRIO)
-- Verificar se foram fornecidas regras de negócio
-- Caso NÃO tenham sido fornecidas:
-  - Interromper a implementação
-  - Solicitar explicitamente:
-    - Regras de negócio
-    - Casos de uso
-    - Critérios de aceitação
-    - Cenários de erro
-- Não iniciar desenvolvimento sem esses insumos
+## 0. Planejamento Prévio (OBRIGATÓRIO E BLOQUEANTE)
+- Você NÃO PODE iniciar a escrita de código de uma feature sem que a documentação de negócios e o plano técnico de execução existam.
+- Se não existirem, utilize a skill `implementation-planning` para criar os documentos `specs/[feature]/*.md`.
+- Leia ambos os documentos atentamente antes de prosseguir.
+- **DURANTE A IMPLEMENTAÇÃO:** Você deve atuar sob as ordens da skill `execute-plan`, o que significa que OBRIGATORIAMENTE você deve ir editando e marcando com `[x]` as tarefas do roteiro técnico (`-exec-plan.md`) à medida que avança.
 
 ## 1. Definição de contrato
-- Criar tipos/interfaces compartilhados em `packages/utils/src/`
-- Exportar via `@repo/utils`
+- Baseado na especificação de negócio, crie tipos/interfaces e DTOs compartilhados em `packages/utils/src/`.
+- Exporte tudo via `@repo/utils`.
 
 ## 2. Testes primeiro (TDD obrigatório)
-- Criar testes unitários ANTES da implementação
+- Criar testes unitários ANTES da implementação.
+- **Referência:** Utilize a lista exata de "Casos de Teste Unitário" mapeada no arquivo `[feature]-exec-plan.md`.
 - Backend:
-  - Testar regras de negócio (services)
-  - Testar cenários de erro (BusinessException)
+  - Testar regras de negócio, limites e restrições nos `services`.
+  - Validar disparos da `BusinessException`.
 - Frontend:
-  - Testar comportamento dos componentes
-  - Testar formulários (validação, estados)
-- Os testes devem refletir diretamente as regras de negócio fornecidas
+  - Testar comportamento dos componentes e regras de tela estipuladas.
 
 ## 3. Implementação Backend (NestJS)
-- Criar módulo por domínio em `apps/backend/src/`
-  - module
-  - controller
-  - service
-  - dto
+- Criar módulo por domínio em `apps/backend/src/`.
+  - module, controller, service, dto.
 - Aplicar:
-  - DTOs com validação
-  - lógica no service
-  - controller apenas orquestra
-  - uso obrigatório de `BusinessException`
-- Exceções:
-  - usar apenas `BusinessException` para regra de negócio
-  - conter código interno + HTTP code (default 400)
-- Tratamento global via `ExceptionFilter`
+  - DTOs com `class-validator` (ver plano técnico).
+  - Lógica no service, orquestração no controller.
+- Tratamento global de erros via `ExceptionFilter` em conjunto com a `BusinessException`.
 
 ## 4. Implementação Frontend (Angular)
-- Criar componentes em `apps/frontend/src/app/`
-- Seguir padronização obrigatória:
-  - `entity-list`
-  - `entity-form`
-  - `entity-detail`
-  - `entity-filter` (quando aplicável)
-- Usar:
-  - Reactive Forms
-  - Signals + computed()
-  - TailwindCSS
-- Separar:
-  - container vs presentational
+- Criar componentes em `apps/frontend/src/app/` segundo a arquitetura do projeto.
+- Seguir a padronização do Design System UEG (uso obrigatório de modais customizados para exclusões, não use `confirm()`).
+- Padrão reativo usando:
+  - Reactive Forms (`FormBuilder`, `FormArray`).
+  - Gestão de estado moderna via `Signals`.
+  - Estilização com TailwindCSS.
 
 ## 5. Integração
-- Consumir backend via HttpClient
-- Nunca acessar lógica diretamente no frontend
+- Consumir backend via HttpClient (geralmente serviços centralizados em `core/http`).
 
 ## 6. Validação final (OBRIGATÓRIO)
-- Executar TODOS os testes unitários após implementação
-- Garantir:
-  - 100% dos testes relacionados à regra de negócio passam
-  - Nenhuma regressão foi introduzida
-- Caso algum teste falhe:
-  - Corrigir implementação (não o teste, salvo erro claro)
-- A entrega só é válida com todos os testes passando
+- Executar TODOS os testes unitários após a implementação da feature (`pnpm test`).
+- Garantir 100% de passagem nos testes da regra de negócio da funcionalidade.
+- A entrega só é considerada pronta quando o pipeline de testes for cumprido com sucesso.
