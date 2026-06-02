@@ -5,6 +5,9 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { AccessDeniedComponent } from './pages/access-denied/access-denied.component';
 import { UsersListComponent } from './pages/admin/users-list.component';
+import { MatchesListComponent } from './pages/matches/components/matches-list/matches-list.component';
+import { MatchesFormComponent } from './pages/matches/components/matches-form/matches-form.component';
+import { GuessBoardComponent } from './pages/guesses/components/guess-board/guess-board.component';
 import { authGuard, adminGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
@@ -18,6 +21,26 @@ export const routes: Routes = [
     component: UsersListComponent,
     canActivate: [authGuard, adminGuard]
   },
-  { path: '', redirectTo: '/admin', pathMatch: 'full' },
-  { path: '**', redirectTo: '/admin' }
+  {
+    path: 'admin/matches',
+    component: MatchesListComponent,
+    canActivate: [authGuard, adminGuard]
+  },
+  {
+    path: 'admin/matches/new',
+    component: MatchesFormComponent,
+    canActivate: [authGuard, adminGuard]
+  },
+  {
+    path: 'admin/matches/:id/edit',
+    component: MatchesFormComponent,
+    canActivate: [authGuard, adminGuard]
+  },
+  {
+    path: 'guesses',
+    component: GuessBoardComponent,
+    canActivate: [authGuard]
+  },
+  { path: '', redirectTo: '/guesses', pathMatch: 'full' },
+  { path: '**', redirectTo: '/guesses' }
 ];
