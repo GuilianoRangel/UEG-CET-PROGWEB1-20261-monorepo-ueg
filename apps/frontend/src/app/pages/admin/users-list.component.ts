@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService, User } from '../../core/auth/auth.service';
 import { parseAuthError } from '../../core/utils/error-handler.util';
-import { CardComponent, CardHeaderComponent, CardTitleComponent, CardContentComponent } from '../../shared/components/ui/card.component';
-import { InputComponent } from '../../shared/components/ui/input.component';
+import { CardComponent } from '../../shared/components/ui/card.component';
 import { ButtonComponent } from '../../shared/components/ui/button.component';
 import { BadgeComponent } from '../../shared/components/ui/badge.component';
 
@@ -15,10 +14,6 @@ import { BadgeComponent } from '../../shared/components/ui/badge.component';
     CommonModule, 
     FormsModule,
     CardComponent,
-    CardHeaderComponent,
-    CardTitleComponent,
-    CardContentComponent,
-    InputComponent,
     ButtonComponent,
     BadgeComponent
   ],

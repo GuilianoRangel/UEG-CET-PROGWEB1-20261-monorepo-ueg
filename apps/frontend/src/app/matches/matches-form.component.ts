@@ -4,7 +4,7 @@ import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatchesService } from './matches.service';
 import { CreateMatchPayload } from '@repo/utils';
-import { CardComponent, CardHeaderComponent, CardTitleComponent, CardContentComponent } from '../shared/components/ui/card.component';
+import { CardComponent } from '../shared/components/ui/card.component';
 import { ButtonComponent } from '../shared/components/ui/button.component';
 import { InputComponent } from '../shared/components/ui/input.component';
 
@@ -23,9 +23,6 @@ export const TEAMS = [
     ReactiveFormsModule,
     RouterLink,
     CardComponent,
-    CardHeaderComponent,
-    CardTitleComponent,
-    CardContentComponent,
     ButtonComponent,
     InputComponent
   ],

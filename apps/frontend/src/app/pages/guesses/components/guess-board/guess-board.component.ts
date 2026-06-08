@@ -1,7 +1,9 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GuessesService } from '../../services/guesses.service';
-import { CardComponent, CardHeaderComponent, CardTitleComponent, CardContentComponent } from '../../../../shared/components/ui/card.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatchDto, PredictionOptionDto } from '@repo/utils';
+import { GuessesService } from '../../../../guesses/guesses.service';
+import { CardComponent, CardContentComponent } from '../../../../shared/components/ui/card.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button.component';
 import { BadgeComponent } from '../../../../shared/components/ui/badge.component';
 
@@ -11,8 +13,6 @@ import { BadgeComponent } from '../../../../shared/components/ui/badge.component
   imports: [
     CommonModule,
     CardComponent,
-    CardHeaderComponent,
-    CardTitleComponent,
     CardContentComponent,
     ButtonComponent,
     BadgeComponent,
@@ -79,7 +79,7 @@ import { BadgeComponent } from '../../../../shared/components/ui/badge.component
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6" *ngIf="!isLoading() && openMatches().length > 0">
           <div *ngFor="let match of openMatches()" class="relative">
-            <ui-card [ngClass]="{'border-primary bg-primary/5': match.userGuessId}">
+            <ui-card [ngClass]="{'border-primary bg-primary/5': match.userGuess}">
               <ui-card-content class="pt-6 space-y-6">
                 <!-- Header of the match -->
                 <div class="flex items-center justify-between text-xs text-muted-foreground border-b border-border pb-3">
@@ -113,19 +113,19 @@ import { BadgeComponent } from '../../../../shared/components/ui/badge.component
                   <span class="text-xs font-bold text-muted-foreground block uppercase tracking-wider mb-2">Escolha seu Palpite:</span>
                   <div class="grid grid-cols-1 gap-2">
                     <button 
-                      *ngFor="let opt of match.options"
+                      *ngFor="let opt of match.predictionOptions"
                       (click)="confirmGuess(match, opt)"
-                      [disabled]="match.userGuessId || isSubmitting()"
+                      [disabled]="match.userGuess || isSubmitting()"
                       [ngClass]="{
-                        'border-primary bg-primary/10 ring-2 ring-primary': match.userPredictionOptionId === opt.id,
-                        'border-border hover:border-muted-foreground hover:bg-muted/30': !match.userGuessId
+                        'border-primary bg-primary/10 ring-2 ring-primary': match.userGuess?.predictionOptionId === opt.id,
+                        'border-border hover:border-muted-foreground hover:bg-muted/30': !match.userGuess
                       }"
                       class="guess-option-btn flex items-center justify-between p-3 border rounded-xl transition-all duration-200 text-left w-full">
                       
                       <div class="flex items-center gap-3">
                         <span class="text-sm font-semibold text-foreground">{{ match.teamA }} {{ opt.teamAScore }} x {{ opt.teamBScore }} {{ match.teamB }}</span>
                         <!-- Your Choice Badge -->
-                        <span *ngIf="match.userPredictionOptionId === opt.id" class="flex items-center text-xs font-bold text-primary gap-0.5">
+                        <span *ngIf="match.userGuess?.predictionOptionId === opt.id" class="flex items-center text-xs font-bold text-primary gap-0.5">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                           <span>Sua Escolha</span>
                         </span>
@@ -139,7 +139,7 @@ import { BadgeComponent } from '../../../../shared/components/ui/badge.component
                 </div>
 
                 <!-- Already guessed status indicator -->
-                <div *ngIf="match.userGuessId" class="text-center pt-2 text-xs font-semibold text-primary/80">
+                <div *ngIf="match.userGuess" class="text-center pt-2 text-xs font-semibold text-primary/80">
                   Palpite enviado! Aguardando o encerramento do jogo.
                 </div>
               </ui-card-content>
@@ -162,12 +162,12 @@ import { BadgeComponent } from '../../../../shared/components/ui/badge.component
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6" *ngIf="!isLoading() && myClosedMatches().length > 0">
-          <div *ngFor="let guess of myClosedMatches()">
+          <div *ngFor="let match of myClosedMatches()">
             <ui-card class="border-border">
               <ui-card-content class="pt-6 space-y-6">
                 <!-- Header of the match -->
                 <div class="flex items-center justify-between text-xs text-muted-foreground border-b border-border pb-3">
-                  <span>{{ guess?.match?.matchDate | date:'dd/MM/yyyy HH:mm' }}</span>
+                  <span>{{ match.matchDate | date:'dd/MM/yyyy HH:mm' }}</span>
                   <ui-badge variant="secondary">Encerrado</ui-badge>
                 </div>
 
@@ -175,9 +175,9 @@ import { BadgeComponent } from '../../../../shared/components/ui/badge.component
                 <div class="flex items-center justify-between px-4">
                   <div class="flex flex-col items-center gap-2 w-1/3">
                     <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
-                      {{ guess?.match?.teamA?.charAt(0).toUpperCase() }}
+                      {{ match.teamA.charAt(0).toUpperCase() }}
                     </div>
-                    <span class="font-bold text-foreground text-sm text-center truncate w-full">{{ guess?.match?.teamA }}</span>
+                    <span class="font-bold text-foreground text-sm text-center truncate w-full">{{ match.teamA }}</span>
                   </div>
                   
                   <div class="flex flex-col items-center justify-center">
@@ -186,9 +186,9 @@ import { BadgeComponent } from '../../../../shared/components/ui/badge.component
 
                   <div class="flex flex-col items-center gap-2 w-1/3">
                     <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-lg">
-                      {{ guess?.match?.teamB?.charAt(0).toUpperCase() }}
+                      {{ match.teamB.charAt(0).toUpperCase() }}
                     </div>
-                    <span class="font-bold text-foreground text-sm text-center truncate w-full">{{ guess?.match?.teamB }}</span>
+                    <span class="font-bold text-foreground text-sm text-center truncate w-full">{{ match.teamB }}</span>
                   </div>
                 </div>
 
@@ -197,17 +197,17 @@ import { BadgeComponent } from '../../../../shared/components/ui/badge.component
                   <span class="text-xs font-bold text-muted-foreground block uppercase tracking-wider mb-2">Opções de Placar e Distribuição de Votos:</span>
                   <div class="grid grid-cols-1 gap-2">
                     <div 
-                      *ngFor="let opt of guess.match.options"
+                      *ngFor="let opt of match.predictionOptions"
                       [ngClass]="{
-                        'border-primary bg-primary/5 ring-1 ring-primary': guess.predictionOptionId === opt.id,
-                        'border-border': guess.predictionOptionId !== opt.id
+                        'border-primary bg-primary/5 ring-1 ring-primary': match.userGuess?.predictionOptionId === opt.id,
+                        'border-border': match.userGuess?.predictionOptionId !== opt.id
                       }"
                       class="flex items-center justify-between p-3 border rounded-xl text-left w-full">
                       
                       <div class="flex items-center gap-3">
-                        <span class="text-sm font-semibold text-foreground">{{ guess.match.teamA }} {{ opt.teamAScore }} x {{ opt.teamBScore }} {{ guess.match.teamB }}</span>
+                        <span class="text-sm font-semibold text-foreground">{{ match.teamA }} {{ opt.teamAScore }} x {{ opt.teamBScore }} {{ match.teamB }}</span>
                         <!-- Your Choice Badge -->
-                        <span *ngIf="guess.predictionOptionId === opt.id" class="flex items-center text-xs font-bold text-primary gap-0.5">
+                        <span *ngIf="match.userGuess?.predictionOptionId === opt.id" class="flex items-center text-xs font-bold text-primary gap-0.5">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                           <span>Seu Palpite</span>
                         </span>
@@ -257,8 +257,8 @@ export class GuessBoardComponent implements OnInit {
   private guessesService = inject(GuessesService);
 
   activeTab = signal<'open' | 'closed'>('open');
-  openMatches = signal<any[]>([]);
-  myClosedMatches = signal<any[]>([]);
+  openMatches = signal<MatchDto[]>([]);
+  myClosedMatches = signal<MatchDto[]>([]);
   isLoading = signal(false);
   isSubmitting = signal(false);
   errorMsg = signal('');
@@ -266,8 +266,8 @@ export class GuessBoardComponent implements OnInit {
 
   // Modal State Signals
   showConfirmModal = signal(false);
-  selectedMatch = signal<any | null>(null);
-  selectedOption = signal<any | null>(null);
+  selectedMatch = signal<MatchDto | null>(null);
+  selectedOption = signal<PredictionOptionDto | null>(null);
   selectedOptionString = signal<string>('');
 
   ngOnInit() {
@@ -280,7 +280,7 @@ export class GuessBoardComponent implements OnInit {
 
     if (this.activeTab() === 'open') {
       this.guessesService.getOpenMatches().subscribe({
-        next: (matches) => {
+        next: (matches: MatchDto[]) => {
           this.openMatches.set(matches);
           this.isLoading.set(false);
         },
@@ -291,8 +291,8 @@ export class GuessBoardComponent implements OnInit {
       });
     } else {
       this.guessesService.getMyClosedMatches().subscribe({
-        next: (guesses) => {
-          this.myClosedMatches.set(guesses);
+        next: (matches: MatchDto[]) => {
+          this.myClosedMatches.set(matches);
           this.isLoading.set(false);
         },
         error: () => {
@@ -309,7 +309,7 @@ export class GuessBoardComponent implements OnInit {
     this.loadData();
   }
 
-  confirmGuess(match: any, option: any) {
+  confirmGuess(match: MatchDto, option: PredictionOptionDto) {
     this.selectedMatch.set(match);
     this.selectedOption.set(option);
     this.selectedOptionString.set(`${match.teamA} ${option.teamAScore} x ${option.teamBScore} ${match.teamB}`);
@@ -325,14 +325,14 @@ export class GuessBoardComponent implements OnInit {
   executeGuess() {
     const match = this.selectedMatch();
     const option = this.selectedOption();
-    if (!match || !option) return;
+    if (!match || !option || !match.id || !option.id) return;
 
     this.isSubmitting.set(true);
     this.errorMsg.set('');
     this.successMsg.set('');
     this.showConfirmModal.set(false);
 
-    this.guessesService.submitGuess(match.id, option.id).subscribe({
+    this.guessesService.submitGuess({ matchId: match.id, predictionOptionId: option.id }).subscribe({
       next: () => {
         this.successMsg.set('Seu palpite foi registrado com sucesso!');
         this.isSubmitting.set(false);
@@ -340,7 +340,7 @@ export class GuessBoardComponent implements OnInit {
         this.selectedOption.set(null);
         this.loadData(); // Reload list to update count and block choices
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.errorMsg.set(err.error?.message || 'Não foi possível registrar seu palpite. Verifique se o jogo já foi encerrado.');
         this.isSubmitting.set(false);
         this.selectedMatch.set(null);
