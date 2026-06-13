@@ -14,33 +14,8 @@ import { CommonModule } from '@angular/common';
       multi: true
     }
   ],
-  template: `
-    <div class="relative w-full flex flex-col gap-1.5">
-      @if (label()) {
-        <label [for]="id()" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground">
-          {{ label() }}
-        </label>
-      }
-      
-      <div class="relative">
-        <input
-          [id]="id()"
-          [type]="type()"
-          [placeholder]="placeholder()"
-          [disabled]="disabled()"
-          [value]="value()"
-          (input)="onInputChange($event)"
-          (blur)="onTouched()"
-          [class]="inputClasses()"
-          [attr.aria-invalid]="!!error()"
-        />
-      </div>
-      
-      @if (error()) {
-        <p class="text-sm text-destructive font-medium">{{ error() }}</p>
-      }
-    </div>
-  `
+  templateUrl: './input.component.html',
+  styleUrl: './input.component.scss'
 })
 export class InputComponent implements ControlValueAccessor {
   id = input<string>(`ui-input-${Math.random().toString(36).substring(2, 9)}`);

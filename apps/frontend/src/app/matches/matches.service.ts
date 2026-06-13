@@ -12,6 +12,7 @@ export class MatchesService {
   private apiUrl = `${environment.apiUrl}/matches`;
 
   getMatches(): Observable<MatchDto[]> {
+    console.log("MatchesService.getMatchs() chamado");
     return this.http.get<MatchDto[]>(this.apiUrl);
   }
 

@@ -24,6 +24,7 @@ import { GuessesModule } from './guesses/guesses.module';
       database: process.env.DATABASE_NAME || 'database.sqlite',
       entities: [User, Match, PredictionOption, UserGuess],
       synchronize: true, // Use with caution in prod
+      logging: true,
     }),
     UsersModule,
     AuthModule,
@@ -34,4 +35,4 @@ import { GuessesModule } from './guesses/guesses.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -105,6 +105,47 @@ describe('MatchesService', () => {
         new BusinessException('O jogo deve ter entre 1 e 4 opções de placar.', 'INVALID_OPTIONS_LENGTH')
       );
     });
+
+    it('should throw BusinessException if teamA name has 3 or fewer characters', async () => {
+      const dto: CreateMatchDto = {
+        teamA: 'USA',
+        teamB: 'Argentina',
+        matchDate: new Date().toISOString(),
+        options: [{ teamAScore: 1, teamBScore: 0 }]
+      };
+
+      await expect(service.create(dto)).rejects.toThrow(
+        new BusinessException('O nome do time A deve ter mais de 3 caracteres.', 'INVALID_TEAM_A_NAME')
+      );
+    });
+
+    it('should throw BusinessException if teamB name has 3 or fewer characters', async () => {
+      const dto: CreateMatchDto = {
+        teamA: 'Brasil',
+        teamB: 'Arg',
+        matchDate: new Date().toISOString(),
+        options: [{ teamAScore: 1, teamBScore: 0 }]
+      };
+
+      await expect(service.create(dto)).rejects.toThrow(
+        new BusinessException('O nome do time B deve ter mais de 3 caracteres.', 'INVALID_TEAM_B_NAME')
+      );
+    });
+  });
+
+  describe('update', () => {
+    it('should throw BusinessException if teamA name has 3 or fewer characters on update', async () => {
+      const dto: CreateMatchDto = {
+        teamA: 'U',
+        teamB: 'Argentina',
+        matchDate: new Date().toISOString(),
+        options: [{ teamAScore: 1, teamBScore: 0 }]
+      };
+
+      await expect(service.update('match-1', dto)).rejects.toThrow(
+        new BusinessException('O nome do time A deve ter mais de 3 caracteres.', 'INVALID_TEAM_A_NAME')
+      );
+    });
   });
 
   describe('close', () => {
