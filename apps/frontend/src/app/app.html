@@ -1,49 +1,67 @@
 @if (authService.isAuth()) {
-  <ui-shell>
-    <app-header (menuToggle)="toggleSidebar()"></app-header>
-    
-    <ui-sidebar [isOpen]="sidebarOpen()" (close)="closeSidebar()">
-      <div sidebar-header class="w-full flex items-center justify-between md:hidden">
-        <span class="font-bold text-primary">Menu</span>
-        <button (click)="closeSidebar()" class="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-md transition-colors">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-      </div>
+<ui-shell>
+  <app-header (menuToggle)="toggleSidebar()"></app-header>
 
-      <nav class="flex flex-col gap-1 px-4">
-        <!-- Admin Links -->
-        @if (authService.isAdmin()) {
-          <a routerLink="/admin" routerLinkActive="bg-primary/10 text-primary font-medium" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            Usuários
-          </a>
-          <a routerLink="/admin/matches" routerLinkActive="bg-primary/10 text-primary font-medium" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            Gerenciar Jogos
-          </a>
-        } @else {
-          <!-- Regular User Links -->
-          <a routerLink="/guesses" routerLinkActive="bg-primary/10 text-primary font-medium" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            Meus Palpites
-          </a>
-        }
-      </nav>
+  <ui-sidebar [isOpen]="sidebarOpen()" (close)="closeSidebar()">
+    <div sidebar-header class="w-full flex items-center justify-between md:hidden">
+      <span class="font-bold text-primary">Menu</span>
+      <button (click)="closeSidebar()"
+        class="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-md transition-colors">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
 
-      <div sidebar-footer class="text-xs text-muted-foreground text-center">
-        Universidade Estadual de Goiás<br/>© 2026
-      </div>
-    </ui-sidebar>
+    <nav class="flex flex-col gap-1 px-4">
+      <!-- Admin Links -->
+      @if (authService.isAdmin()) {
+      <a routerLink="/admin" routerLinkActive="bg-primary/10 text-primary font-medium"
+        [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()"
+        class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+          </path>
+        </svg>
+        Usuários
+      </a>
+      <a routerLink="/admin/matches" routerLinkActive="bg-primary/10 text-primary font-medium"
+        [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()"
+        class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        Gerenciar Jogos
+      </a>
+      }
+      <!-- Regular User Links -->
+      <a routerLink="/guesses" routerLinkActive="bg-primary/10 text-primary font-medium"
+        [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()"
+        class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Meus Palpites
+      </a>
+    </nav>
 
-    <router-outlet></router-outlet>
-  </ui-shell>
+    <div sidebar-footer class="text-xs text-muted-foreground text-center">
+      Universidade Estadual de Goiás<br />© 2026
+    </div>
+  </ui-sidebar>
+
+  <router-outlet></router-outlet>
+</ui-shell>
 } @else {
-  <div class="flex flex-col min-h-screen bg-background transition-colors duration-200">
-    <app-header></app-header>
-    <main class="flex-1 relative flex flex-col">
-      <router-outlet></router-outlet>
-    </main>
-  </div>
+<div class="flex flex-col min-h-screen bg-background transition-colors duration-200">
+  <app-header></app-header>
+  <main class="flex-1 relative flex flex-col">
+    <router-outlet></router-outlet>
+  </main>
+</div>
 }
 
 <ui-toast></ui-toast>
