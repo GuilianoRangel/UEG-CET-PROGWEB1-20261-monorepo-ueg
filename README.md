@@ -1,8 +1,68 @@
-# Monorepo UEG2 — Autenticação e Gestão de Usuários
+# Monorepo UEG2 — Autenticação e Gestão de Usuários (Starter/Stub Project)
 
-Este monorepo moderno foi desenvolvido para estruturar e gerenciar o portal acadêmico, integrando de ponta a ponta as camadas de **Autenticação Segura** e **Gestão Administrativa**. A arquitetura foi concebida sob os pilares de alto desempenho, reatividade baseada em Signals e testes rigorosos (TDD).
+Este repositório serve como um **projeto base (starter/stub project)** moderno e estruturado para o portal acadêmico da UEG, integrando as camadas de **Autenticação Segura** e **Gestão Administrativa** de ponta a ponta. A arquitetura foi concebida sob os pilares de alto desempenho, reatividade baseada em Signals e testes rigorosos (TDD).
 
 ---
+
+## 📌 Como Usar como Stub/Starter Project
+
+Para utilizar este projeto como ponto de partida para um novo repositório:
+
+### Passo 1: Clonar o Repositório Base
+Clone o repositório especificando a branch desejada e a pasta destino do seu novo projeto:
+```bash
+git clone -b clean-project-AI-workflow --single-branch https://github.com/GuilianoRangel/UEG-CET-PROGWEB1-20261-monorepo-ueg.git meu-novo-projeto
+cd meu-novo-projeto
+```
+
+### Passo 2: Inicializar o seu Próprio Repositório Git
+Você tem duas opções dependendo de como deseja gerenciar o histórico:
+
+#### Opção A: Começar um Histórico Limpo (Recomendado)
+Se deseja remover o histórico de commits deste template e iniciar do zero:
+```bash
+# Remove a pasta .git existente
+rm -rf .git
+
+# Inicializa um novo repositório
+git init
+
+# Adiciona todos os arquivos do stub
+git add .
+git commit -m "chore: initial commit from stub template"
+
+# Conecta ao seu novo repositório remoto
+git remote add origin <URL_DO_SEU_NOVO_REPOSITORIO>
+git branch -M main
+git push -u origin main
+```
+
+#### Opção B: Manter o Histórico e Rastrear Atualizações (Recomendado)
+Se você deseja manter o histórico do template para poder puxar futuras atualizações e melhorias deste stub utilizando comandos de merge:
+
+```bash
+# 1. Renomeie a branch atual do template local para 'template-base' (servirá para rastrear atualizações)
+git branch -m clean-project-AI-workflow template-base
+
+# 2. Crie e acesse a sua branch principal de desenvolvimento (ex: main)
+git checkout -b main
+
+# 3. Remova o remote 'origin' antigo (aponta para o stub) e adicione o seu novo repositório
+git remote remove origin
+git remote add origin <URL_DO_SEU_NOVO_REPOSITORIO>
+
+# 4. Adicione o repositório original do stub como 'upstream' para receber atualizações futuras
+git remote add upstream https://github.com/GuilianoRangel/UEG-CET-PROGWEB1-20261-monorepo-ueg.git
+
+# 5. Envie ambas as branches para o seu novo repositório
+git push -u origin main
+git push -u origin template-base
+```
+
+Dessa forma, você poderá utilizar o script automatizado `scripts/update-template.sh` para puxar atualizações futuras do stub diretamente para a sua branch de trabalho. Veja mais detalhes no guia [docs/template-update.md](file:///home/guiliano/workspace/monorepo-ueg2/docs/template-update.md).
+
+---
+
 
 ## 🛠️ Stack Tecnológico
 
@@ -31,6 +91,11 @@ O repositório adota a estrutura padrão de workspaces:
 │   ├── auth.md            # Especificação de requisitos da autenticação
 │   ├── arquitetura.md     # Detalhes de arquitetura, fluxos Mermaid e Signals
 │   └── plan/              # Planos de implementação passo a passo
+├── docs/                  # Documentação do projeto e guias
+│   ├── smtp-config.md     # Configuração de envio de e-mails
+│   └── template-update.md # Guia de atualização a partir do template (stub)
+├── scripts/               # Scripts utilitários de automação
+│   └── update-template.sh # Script para mesclar atualizações do template upstream
 ├── .agents/               # Instruções críticas, regras de codificação e skills para IA
 └── AGENT.md               # Guia de governança de Inteligência Artificial
 ```
