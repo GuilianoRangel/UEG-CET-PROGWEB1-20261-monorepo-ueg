@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 @Injectable()
 export class RecoveryService {
-  private tokens: Map<string, { email: string, expires: number }> = new Map();
+  private tokens: Map<string, { email: string; expires: number }> = new Map();
 
   generateToken(email: string): string {
     const token = crypto.randomBytes(32).toString('hex');

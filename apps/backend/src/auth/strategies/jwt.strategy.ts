@@ -12,7 +12,7 @@ export interface JwtPayload {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private configService: ConfigService) {
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -20,7 +20,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<{ id: string; email: string; role: string; nome: string }> {
-    return { id: payload.sub, email: payload.email, role: payload.role, nome: payload.nome };
+  validate(payload: JwtPayload): {
+    id: string;
+    email: string;
+    role: string;
+    nome: string;
+  } {
+    return {
+      id: payload.sub,
+      email: payload.email,
+      role: payload.role,
+      nome: payload.nome,
+    };
   }
 }

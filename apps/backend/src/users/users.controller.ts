@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Patch, Param, UseGuards, Logger, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Param,
+  UseGuards,
+  Logger,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -9,14 +17,13 @@ import { MailerService } from '../mailer/mailer.service';
 
 @Controller('users')
 export class UsersController {
-
   private readonly logger = new Logger(UsersController.name);
 
   constructor(
     private readonly usersService: UsersService,
     private readonly recoveryService: RecoveryService,
     private readonly mailerService: MailerService,
-  ) { }
+  ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)

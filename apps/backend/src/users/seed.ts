@@ -29,7 +29,9 @@ export class SeedService implements OnModuleInit {
         `Usuário admin criado com sucesso (${adminEmail}). Altere a senha padrão!`,
       );
     } else {
-      this.logger.debug(`Usuário admin já existe (${adminEmail}). Seed ignorado.`);
+      this.logger.debug(
+        `Usuário admin já existe (${adminEmail}). Seed ignorado.`,
+      );
     }
   }
 }

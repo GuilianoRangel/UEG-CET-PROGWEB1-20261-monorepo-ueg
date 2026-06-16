@@ -7,11 +7,6 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 import { MailerModule } from './mailer/mailer.module';
-import { Match } from './matches/entities/match.entity';
-import { PredictionOption } from './matches/entities/prediction-option.entity';
-import { UserGuess } from './guesses/entities/user-guess.entity';
-import { MatchesModule } from './matches/matches.module';
-import { GuessesModule } from './guesses/guesses.module';
 
 @Module({
   imports: [
@@ -22,17 +17,15 @@ import { GuessesModule } from './guesses/guesses.module';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: process.env.DATABASE_NAME || 'database.sqlite',
-      entities: [User, Match, PredictionOption, UserGuess],
+      entities: [User],
       synchronize: true, // Use with caution in prod
       logging: true,
     }),
     UsersModule,
     AuthModule,
     MailerModule,
-    MatchesModule,
-    GuessesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

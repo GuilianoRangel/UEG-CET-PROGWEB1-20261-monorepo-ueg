@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export enum Role {
   USER = 'user',
@@ -8,29 +14,29 @@ export enum Role {
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  nome: string;
+  nome!: string;
 
   @Column()
-  senha: string;
+  senha!: string;
 
   @Column({ default: false })
-  ativo: boolean;
+  ativo!: boolean;
 
   @Column({
     type: 'varchar',
     default: Role.USER,
   })
-  role: Role;
+  role!: Role;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

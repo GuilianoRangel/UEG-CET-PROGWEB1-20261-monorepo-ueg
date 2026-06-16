@@ -6,9 +6,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { AccessDeniedComponent } from './pages/access-denied/access-denied.component';
 import { UsersListComponent } from './pages/admin/users-list.component';
 import { authGuard, adminGuard } from './core/auth/auth.guard';
-import { MatchesListComponent } from './matches/matches-list.component';
-import { MatchesFormComponent } from './matches/matches-form.component';
-import { GuessBoardComponent } from './guesses/guess-board.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { inject } from '@angular/core';
 import { AuthService } from './core/auth/auth.service';
 
@@ -24,30 +22,15 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard]
   },
   {
-    path: 'admin/matches',
-    component: MatchesListComponent,
-    canActivate: [authGuard, adminGuard]
-  },
-  {
-    path: 'admin/matches/new',
-    component: MatchesFormComponent,
-    canActivate: [authGuard, adminGuard]
-  },
-  {
-    path: 'admin/matches/:id/edit',
-    component: MatchesFormComponent,
-    canActivate: [authGuard, adminGuard]
-  },
-  {
-    path: 'guesses',
-    component: GuessBoardComponent,
+    path: 'dashboard',
+    component: DashboardComponent,
     canActivate: [authGuard]
   },
   {
     path: '',
     redirectTo: () => {
       const authService = inject(AuthService);
-      return authService.isAdmin() ? '/admin' : '/guesses';
+      return authService.isAdmin() ? '/admin' : '/dashboard';
     },
     pathMatch: 'full'
   },
@@ -55,7 +38,7 @@ export const routes: Routes = [
     path: '**',
     redirectTo: () => {
       const authService = inject(AuthService);
-      return authService.isAdmin() ? '/admin' : '/guesses';
+      return authService.isAdmin() ? '/admin' : '/dashboard';
     }
   }
 ];

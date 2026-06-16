@@ -40,7 +40,7 @@ Se qualquer etapa falhar:
 
 1. Identificar o app/pacote afetado:
    - `apps/backend`
-   - `apps/dashboard`
+   - `apps/frontend`
    - `packages/*`
 
 2. Analisar a causa do erro.
@@ -100,5 +100,5 @@ pnpm build
 - Plano de implementação, quando uma correção exigir confirmação.
 - **Lista de erros restantes agrupados por:**
   - `apps/backend`
-  - `apps/dashboard`
+  - `apps/frontend`
   - `packages/*`

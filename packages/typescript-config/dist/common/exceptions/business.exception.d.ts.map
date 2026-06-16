@@ -1,0 +1,1 @@
+{"version":3,"file":"business.exception.d.ts","sourceRoot":"","sources":["../../../../../apps/backend/src/common/exceptions/business.exception.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,UAAU,EAAE,MAAM,gBAAgB,CAAC;AAE3D,qBAAa,iBAAkB,SAAQ,aAAa;gBAEhD,OAAO,EAAE,MAAM,EACf,IAAI,EAAE,MAAM,EACZ,MAAM,GAAE,UAAmC;CAW9C"}

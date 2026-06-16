@@ -4,13 +4,17 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { User, Role } from './entities/user.entity';
 import { BusinessException } from '../common/exceptions/business.exception';
 import * as bcrypt from 'bcrypt';
-import { Repository } from 'typeorm';
 
 jest.mock('bcrypt');
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repository: jest.Mocked<Partial<Repository<User>>>;
+  let repository: {
+    findOne: jest.Mock;
+    create: jest.Mock;
+    save: jest.Mock;
+    find: jest.Mock;
+  };
 
   beforeEach(async () => {
     repository = {
@@ -36,8 +40,10 @@ describe('UsersService', () => {
 
   describe('create', () => {
     it('should throw an error if email already exists', async () => {
-      repository.findOne.mockResolvedValue({ id: '1' } as User);
-      await expect(service.create({ email: 'test@test.com', nome: 'Test', senha: '123' })).rejects.toThrow(
+      repository.findOne.mockResolvedValue({ id: '1' });
+      await expect(
+        service.create({ email: 'test@test.com', nome: 'Test', senha: '123' }),
+      ).rejects.toThrow(
         new BusinessException('E-mail já está em uso', 'AUTH_EMAIL_EXISTS'),
       );
     });
@@ -45,13 +51,29 @@ describe('UsersService', () => {
     it('should create a user with ativo false', async () => {
       repository.findOne.mockResolvedValue(null);
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashed');
-      const newUser = { email: 'test@test.com', nome: 'Test', senha: 'hashed', ativo: false, role: Role.USER };
-      repository.create.mockReturnValue(newUser as User);
-      repository.save.mockResolvedValue({ id: '1', ...newUser } as User);
+      const newUser = {
+        email: 'test@test.com',
+        nome: 'Test',
+        senha: 'hashed',
+        ativo: false,
+        role: Role.USER,
+      };
+      repository.create.mockReturnValue(newUser);
+      repository.save.mockResolvedValue({ id: '1', ...newUser });
 
-      const result = await service.create({ email: 'test@test.com', nome: 'Test', senha: '123' });
+      const result = await service.create({
+        email: 'test@test.com',
+        nome: 'Test',
+        senha: '123',
+      });
       expect(result.ativo).toBe(false);
-      expect(repository.create).toHaveBeenCalledWith({ email: 'test@test.com', nome: 'Test', senha: 'hashed', ativo: false, role: Role.USER });
+      expect(repository.create).toHaveBeenCalledWith({
+        email: 'test@test.com',
+        nome: 'Test',
+        senha: 'hashed',
+        ativo: false,
+        role: Role.USER,
+      });
       expect(repository.save).toHaveBeenCalled();
     });
   });

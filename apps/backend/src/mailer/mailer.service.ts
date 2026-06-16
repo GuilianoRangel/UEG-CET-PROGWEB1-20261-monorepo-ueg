@@ -13,7 +13,8 @@ export class MailerService {
   }
 
   private initializeTransporter(): void {
-    const isEmailDisabled = this.configService.get<string>('EMAIL_DISABLED') === 'true';
+    const isEmailDisabled =
+      this.configService.get<string>('EMAIL_DISABLED') === 'true';
     if (isEmailDisabled) {
       this.logger.log('Envio de e-mails desativado. Modo simulação ativo.');
       return;
@@ -31,14 +32,16 @@ export class MailerService {
   }
 
   async sendPasswordResetEmail(to: string, token: string): Promise<void> {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
     const resetLink = `${frontendUrl}/auth/reset-password?token=${token}`;
     const from = '"Monorepo UEG" <noreply@ueg.br>';
     const subject = 'Recuperação de Senha';
     const text = `Para redefinir sua senha, clique no link: ${resetLink}`;
     const html = `<p>Para redefinir sua senha, clique no link: <a href="${resetLink}">${resetLink}</a></p>`;
 
-    const isEmailDisabled = this.configService.get<string>('EMAIL_DISABLED') === 'true';
+    const isEmailDisabled =
+      this.configService.get<string>('EMAIL_DISABLED') === 'true';
 
     if (isEmailDisabled) {
       await this.simulateEmail(to, from, subject, text, html, resetLink);
@@ -55,7 +58,9 @@ export class MailerService {
     html: string,
     resetLink: string,
   ): Promise<void> {
-    const simulationFile = this.configService.get<string>('EMAIL_SIMULATION_FILE') || 'simulated_emails.log';
+    const simulationFile =
+      this.configService.get<string>('EMAIL_SIMULATION_FILE') ||
+      'simulated_emails.log';
     const timestamp = new Date().toISOString();
     const simulatedContent = `
 ========================================
@@ -72,10 +77,12 @@ HTML:
 ${html}
 ========================================
 `;
-    this.logger.log(`[SIMULAÇÃO] Escrevendo e-mail de recuperação para ${to} no arquivo ${simulationFile}`);
-    
-    fs.appendFileSync(simulationFile, simulatedContent, 'utf8');
-    
+    this.logger.log(
+      `[SIMULAÇÃO] Escrevendo e-mail de recuperação para ${to} no arquivo ${simulationFile}`,
+    );
+
+    await fs.promises.appendFile(simulationFile, simulatedContent, 'utf8');
+
     this.logger.log(`[SIMULAÇÃO] Link de recuperação: ${resetLink}`);
   }
 
@@ -87,7 +94,9 @@ ${html}
     html: string,
   ): Promise<void> {
     if (!this.transporter) {
-      this.logger.error('Erro: Transporter do nodemailer não foi inicializado.');
+      this.logger.error(
+        'Erro: Transporter do nodemailer não foi inicializado.',
+      );
       return;
     }
 
@@ -98,6 +107,8 @@ ${html}
       text,
       html,
     });
-    this.logger.log(`E-mail de recuperação de senha enviado com sucesso para ${to}`);
+    this.logger.log(
+      `E-mail de recuperação de senha enviado com sucesso para ${to}`,
+    );
   }
 }

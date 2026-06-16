@@ -8,10 +8,12 @@ description: Fluxo de implementação técnica de novas funcionalidades usando T
 Quando solicitado a implementar (codificar) uma nova feature, você DEVE atuar em conjunto com a skill de `implementation-planning` e seguir esta ordem rigorosamente:
 
 ## 0. Planejamento Prévio (OBRIGATÓRIO E BLOQUEANTE)
-- Você NÃO PODE iniciar a escrita de código de uma feature sem que a documentação de negócios e o plano técnico de execução existam.
-- Se não existirem, utilize a skill `implementation-planning` para criar os documentos `specs/[feature]/*.md`.
-- Leia ambos os documentos atentamente antes de prosseguir.
-- **DURANTE A IMPLEMENTAÇÃO:** Você deve atuar sob as ordens da skill `execute-plan`, o que significa que OBRIGATORIAMENTE você deve ir editando e marcando com `[x]` as tarefas do roteiro técnico (`-exec-plan.md`) à medida que avança.
+- Você NÃO PODE iniciar a escrita de código de uma nova feature sem que a documentação de requisitos de negócio e o plano técnico de execução existam.
+- **Estrutura de Documentos Obrigatória**:
+  - **Especificação de Negócio/Requisitos**: Deve ser criada em `specs/[feature].md` (use [specs/auth.md](file:///home/guiliano/workspace/monorepo-ueg2/specs/auth.md) como modelo de referência).
+  - **Plano de Implementação Técnico**: Deve ser criado em `specs/plan/[feature]-plan.md` (use [specs/plan/auth-plan.md](file:///home/guiliano/workspace/monorepo-ueg2/specs/plan/auth-plan.md) como modelo de referência).
+- Se estes arquivos não existirem, utilize as ferramentas de planejamento e a skill `implementation-planning` para criá-los antes de qualquer alteração de código. Leia ambos os documentos atentamente.
+- **DURANTE A IMPLEMENTAÇÃO:** Você deve atuar sob as ordens da skill `execute-plan`, o que significa que OBRIGATORIAMENTE você deve ir editando e marcando com `[x]` as tarefas do roteiro técnico (`-plan.md` ou `task.md`) à medida que avança.
 
 ## 1. Definição de contrato
 - Baseado na especificação de negócio, crie tipos/interfaces e DTOs compartilhados em `packages/utils/src/`.

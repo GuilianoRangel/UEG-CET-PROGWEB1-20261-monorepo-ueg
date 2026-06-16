@@ -9,6 +9,7 @@ import { RecoveryService } from './recovery.service';
 import { BusinessException } from '../common/exceptions/business.exception';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { User } from '../users/entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +29,10 @@ export class AuthController {
   @Post('login')
   async login(@Request() req: express.Request) {
     if (!req.user) {
-      throw new BusinessException('Usuário não autenticado', 'AUTH_UNAUTHORIZED');
+      throw new BusinessException(
+        'Usuário não autenticado',
+        'AUTH_UNAUTHORIZED',
+      );
     }
     return this.authService.login(req.user as Omit<User, 'senha'>);
   }
@@ -41,7 +45,9 @@ export class AuthController {
       const token = this.recoveryService.generateToken(email);
       await this.mailerService.sendPasswordResetEmail(email, token);
     }
-    return { message: 'Se o e-mail existir, um link de recuperação será enviado.' };
+    return {
+      message: 'Se o e-mail existir, um link de recuperação será enviado.',
+    };
   }
 
   @Post('reset-password')
@@ -49,12 +55,14 @@ export class AuthController {
     const { token, newPassword } = resetPasswordDto;
     const email = this.recoveryService.validateToken(token);
     if (!email) {
-      throw new BusinessException('Token inválido ou expirado', 'AUTH_INVALID_TOKEN');
+      throw new BusinessException(
+        'Token inválido ou expirado',
+        'AUTH_INVALID_TOKEN',
+      );
     }
-    
+
     const user = await this.usersService.findByEmail(email);
     if (user) {
-      const bcrypt = require('bcrypt');
       const hash = await bcrypt.hash(newPassword, 10);
       await this.usersService.updatePassword(user.id, hash);
       this.recoveryService.deleteToken(token);

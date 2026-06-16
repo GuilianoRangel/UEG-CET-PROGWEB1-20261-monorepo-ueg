@@ -12,29 +12,47 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<Omit<User, 'senha'> | null> {
+  async validateUser(
+    email: string,
+    pass: string,
+  ): Promise<Omit<User, 'senha'> | null> {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
-      throw new BusinessException('E-mail/senha não confere', 'AUTH_INVALID_CREDENTIALS');
+      throw new BusinessException(
+        'E-mail/senha não confere',
+        'AUTH_INVALID_CREDENTIALS',
+      );
     }
 
     const isMatch = await bcrypt.compare(pass, user.senha);
     if (!isMatch) {
-      throw new BusinessException('E-mail/senha não confere', 'AUTH_INVALID_CREDENTIALS');
+      throw new BusinessException(
+        'E-mail/senha não confere',
+        'AUTH_INVALID_CREDENTIALS',
+      );
     }
 
     if (!user.ativo) {
-      throw new BusinessException('Conta aguardando liberação do administrador', 'AUTH_USER_INACTIVE');
+      throw new BusinessException(
+        'Conta aguardando liberação do administrador',
+        'AUTH_USER_INACTIVE',
+      );
     }
 
-    const { senha, ...result } = user;
-    return result;
+    const result = { ...user } as Partial<User>;
+    delete result.senha;
+    return result as Omit<User, 'senha'>;
   }
 
   async login(user: Omit<User, 'senha'>): Promise<{ access_token: string }> {
-    const payload = { email: user.email, sub: user.id, role: user.role, nome: user.nome };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      role: user.role,
+      nome: user.nome,
+    };
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: await this.jwtService.signAsync(payload),
     };
   }
 }

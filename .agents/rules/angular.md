@@ -1,169 +1,66 @@
 # Angular Rules
-- Standalone components obrigatórios, zero NgModules
-- Angular 20+ com nova sintaxe de templates
-- TailwindCSS obrigatório para estilização
-- Reactive Forms obrigatório para formulários
-- Signals para estado reativo
-- HttpClient para consumo de APIs do backend NestJS
-- TypeScript strict obrigatório
 
+- **Angular 21+**: Utilização obrigatória da versão 21+ com novas sintaxes de controle de fluxo e APIs modernas de reatividade. (Consulte a Skill [angular-dev](../skills/angular-dev/SKILL.md) para padrões de desenvolvimento avançados).
+- **Standalone Components**: Obrigatório. Não utilizar NgModules.
+- **TailwindCSS v4**: Estilização obrigatória baseada nos tokens globais e utilitários do Tailwind v4.
+- **Design System UEG**: Mandatório seguir estritamente as especificações de `specs/design-system.md` (Consulte também [tailwind-design-system](../skills/tailwind-design-system/SKILL.md) e [frontend-design](../skills/frontend-design/SKILL.md) para padrões visuais).
+- **Reactive Forms**: Uso mandatório de formulários reativos (`ReactiveFormsModule`), fortemente tipados.
+- **Signals**: Uso preferencial de Signals para controle de estado reativo, computado e local.
+- **🚫 Proibição Estrita de `any`**: Proibido o uso de `any` em propriedades, métodos, inputs, outputs ou serviços. Use interfaces e tipos estritos.
+- **TDD / Vitest**: Todo componente ou serviço de negócio deve conter cobertura de testes unitários escrita com Vitest e TestBed. (Consulte a Skill [angular-testing](../skills/angular-testing/SKILL.md) para técnicas de mock e testes de reatividade).
 
-## Componentização
-- Aplicar componentização sempre que possível
-- Separar responsabilidades por tipo de componente:
-  - Listagem: `entity-list.component`
-  - Formulário: `entity-form.component`
-  - Visualização/detalhe: `entity-detail.component`
-  - Filtros: `entity-filter.component`
-  - Item/card de listagem: `entity-card.component`
-  - Modal/dialog: `entity-dialog.component`
+---
 
+## 🎨 1. Design System e Estilização (TailwindCSS v4)
+* **Componentes UI Compartilhados**: Toda interface deve ser montada a partir dos componentes atômicos em `apps/frontend/src/app/shared/components/ui/`:
+  - **Botões**: `<button ui-button>` ou `<a ui-button>` com atributos `variant` e `size`.
+  - **Inputs**: `<ui-input>` integrado ao formulário reativo via `ControlValueAccessor`.
+  - **Cartões**: Estruturação de blocos de informação usando `<ui-card>`, `<ui-card-header>`, `<ui-card-title>` e `<ui-card-content>`.
+  - **Badges**: `<ui-badge>` para exibição de status.
+* **Layout Shell**: Telas restritas devem herdar e rodar dentro do layout de App Shell (`shell.component.ts`), utilizando `<ui-header>` e `<ui-sidebar>`.
+* **Proibição de Cores Hardcoded**: Fica proibido utilizar classes de cores explícitas no HTML (ex: `bg-gray-900`, `text-green-500`) se houver um token correspondente no design system (utilize `bg-background`, `bg-card`, `text-primary`, etc.).
+* **Uso de SCSS**: O projeto está configurado para utilizar **SCSS** (`schematics.style: "scss"`). Estilos locais complexos que não puderem ser resolvidos via Tailwind v4 devem ser definidos em arquivos `.scss` específicos do componente e associados via `styleUrl`.
+* **Utilitário `cn`**: Sempre use a função helper `cn()` (em `utils/cn.util.ts`) para lidar com a concatenação condicional de classes Tailwind sem causar conflito de classes.
 
-## Padronização obrigatória de nomes
-- Componentes de listagem devem terminar com `-list`
-  - Ex: `user-list.component.ts`
-- Componentes de formulário devem terminar com `-form`
-  - Ex: `user-form.component.ts`
-- Componentes de detalhe/visualização devem terminar com `-detail`
-  - Ex: `user-detail.component.ts`
-- Componentes de filtro devem terminar com `-filter`
-  - Ex: `user-filter.component.ts`
-- Componentes de card/item devem terminar com `-card`
-  - Ex: `user-card.component.ts`
-- Componentes de diálogo/modal devem terminar com `-dialog`
-  - Ex: `user-dialog.component.ts`
+---
 
+## 🏗️ 2. Componentização e Estrutura
+- **Estrutura por Domínio**: Organizar o código por módulo/feature (ex: `features/users/`) agrupando componentes, rotas, modelos e serviços correspondentes.
+- **Padronização de Nomes**:
+  - Listagem: `entity-list.component.ts`
+  - Formulário: `entity-form.component.ts`
+  - Detalhe: `entity-detail.component.ts`
+  - Filtros: `entity-filter.component.ts`
+  - Card: `entity-card.component.ts`
+  - Modal/Diálogo: `entity-dialog.component.ts`
+- **Containers vs Presentational Components**:
+  - **Containers (Smart)**: Interagem com serviços, gerenciam estado de carregamento/erro, buscam dados da API.
+  - **Presentational (Dumb)**: Recebem dados via `@Input` (ou novas APIs de `input()`), emitem ações via `@Output` (ou `output()`), e cuidam puramente de visualização.
 
-## Estrutura por domínio
-- Organizar código por domínio/feature, não por tipo técnico
-- Cada domínio deve conter seus próprios components, services, models e routes
-- Exemplo:
+---
 
+## 🛜 3. Reatividade e Comunicação HTTP
+* **Angular Signals**:
+  - Usar `signal()` para valores de estado locais mutáveis.
+  - Usar `computed()` para criar valores derivados puros. Evitar lógica complexa no template.
+  - Usar `effect()` apenas para efeitos colaterais de sincronização que não alterem outros signals.
+* **HttpClient**: Services de API devem centralizar todas as requisições HTTP para o backend. Nunca monte caminhos HTTP ou strings de URL diretamente nos componentes.
+* **Tratamento de Erros**: Consumir a função utilitária `parseAuthError()` para formatar códigos de erro do backend em mensagens de UI claras.
+* **Feedback (ToastService)**: Injetar o `ToastService` (`import { ToastService } from '../shared/components/ui/toast.service'`) para emitir mensagens temporárias de feedback rápido (`success()`, `error()`, `info()`). Não use `alert()` ou `confirm()` nativos do navegador.
 
-```txt
-features/
-  users/
-    components/
-      user-list/
-      user-form/
-      user-detail/
-      user-filter/
-      user-card/
-    services/
-      user.service.ts
-    models/
-      user.model.ts
-    users.routes.ts
-````
+---
 
+## 📝 4. Formulários
+* **Reactive Forms Obrigatório**: Não utilize formulários template-driven.
+* **Validações Explícitas**: Definir regras de validação (como `Validators.required`, `Validators.email`) de forma nítida.
+* **Feedback Visual**: Exibir mensagens de erro individuais e contextualizadas em cada campo inválido.
+* **Segurança de Ações**: Manter o botão de submissão do formulário devidamente desabilitado enquanto os campos forem inválidos ou uma requisição estiver sendo processada.
 
-## Containers e Presentational Components
-* Separar componentes container e presentational sempre que fizer sentido
-* Container:
-  * Busca dados
-  * Controla estado
-  * Chama services
-  * Trata loading e erro
+---
 
-
-* Presentational:
-  * Apenas exibe dados
-  * Emite eventos
-  * Não chama HttpClient diretamente
-  * Não acessa services de API diretamente
-
-
-## Templates
-* Usar nova sintaxe de controle de fluxo do Angular:
-
-  * `@if` no lugar de `*ngIf`
-  * `@for` no lugar de `*ngFor`
-  * `@switch` no lugar de `*ngSwitch`
-
-* Em `@for`, sempre declarar `track`
-  * Ex: `@for (item of items(); track item.id) { ... }`
-
-* Evitar lógica complexa diretamente no template
-* Preferir `computed()` para valores derivados usados na tela
-
-
-## Estado e reatividade
-* Usar Signals para estado local de componentes
-* Usar `computed()` para valores derivados
-* Usar `effect()` apenas quando necessário
-* Evitar Subjects e BehaviorSubjects quando Signals resolverem o caso
-* RxJS deve ser usado principalmente para fluxos assíncronos, HttpClient e integrações
-
-
-## Formulários
-* Usar Reactive Forms obrigatoriamente
-* Não usar Template-driven Forms
-* Criar formulário em componente próprio `entity-form`
-* Validações devem ficar explícitas no FormGroup/FormControl
-* Exibir mensagens de erro por campo
-* Desabilitar botão de envio quando o formulário estiver inválido ou em processamento
-* Usar tipos fortes nos formulários sempre que possível
-* Separar DTOs de criação/edição dos models de visualização
-
-
-## Services e comunicação com API
-* Usar HttpClient para consumir APIs do backend NestJS
-* Services devem concentrar chamadas HTTP
-* Componentes não devem montar URLs manualmente
-* URLs base devem vir de environment/configuração
-* Tratar erros de API de forma centralizada via interceptor
-* Evitar lógica de negócio pesada nos componentes
-
-
-## Estilização com TailwindCSS
-* Usar TailwindCSS como padrão de estilização
-* Evitar CSS customizado quando Tailwind resolver
-* Manter classes organizadas e legíveis
-* Reutilizar padrões visuais em componentes compartilhados
-* Evitar duplicação excessiva de classes em telas semelhantes
-* Garantir responsividade usando utilitários do Tailwind
-* Padronizar estados visuais:
-  * loading
-  * erro
-  * sucesso
-  * vazio
-  * desabilitado
-
-## Performance
-* Usar `ChangeDetectionStrategy.OnPush` sempre que possível
-* Usar `track` obrigatoriamente em `@for`
-* Evitar chamadas de métodos diretamente no template quando houver custo computacional
-* Preferir `computed()` para cálculos exibidos na tela
-* Usar lazy loading de rotas por feature
-
-## Boas práticas
-* Evitar componentes grandes, preferencialmente abaixo de 300 linhas
-* Evitar lógica de negócio em componentes
-* Delegar regras e integrações para services
-* Usar tipagem forte com interfaces/types
-* Usar pipes para formatação de dados
-* Manter imports organizados
-* Evitar duplicação de código
-* Criar componentes compartilhados apenas quando houver reutilização real
-
-
-## UX
-* Toda listagem deve prever:
-  * estado de carregamento
-  * estado vazio
-  * estado de erro
-  * paginação ou estratégia clara de carregamento
-
-
-* Todo formulário deve prever:
-  * validação visual
-  * mensagens de erro
-  * botão de salvar desabilitado quando inválido
-  * feedback de sucesso ou erro
-
-
-* Toda tela de detalhe deve prever:
-  * carregamento
-  * erro ao buscar dados
-  * ação de voltar
-  * ações principais claramente visíveis
+## 🧪 5. Testes Unitários e de Integração (Vitest)
+* **Vitest + TestBed**: Toda lógica de tela, ativação de signals e chamadas HTTP deve ser validada por testes.
+* **Simulação de Requisições**: Utilizar `HttpTestingController` para simular as payloads de sucesso e falha da API.
+* **Fluxos de Navegação**: Utilizar `RouterTestingHarness` para testar se os guards barram usuários ou reúnem dados como esperado.
+* **Performance**: Usar `ChangeDetectionStrategy.OnPush` para melhorar o tempo de renderização e testar a integridade sob detecção de mudanças OnPush.
+* **Diretrizes Detalhadas**: Para padrões detalhados de mock de injeção de dependência e de HTTP no frontend, consulte a Skill [angular-testing/SKILL.md](../skills/angular-testing/SKILL.md).
