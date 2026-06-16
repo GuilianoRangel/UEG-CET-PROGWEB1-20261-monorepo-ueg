@@ -4,6 +4,28 @@ Este monorepo moderno foi desenvolvido para estruturar e gerenciar o portal acad
 
 ---
 
+## 🚀 Projeto Base (Starter/Stub Project)
+
+Este repositório possui uma branch especial configurada como **Starter/Stub Project** (`clean-project-AI-workflow`). Ela foi estruturada especificamente para ser usada como base para a criação de novos projetos, contendo ferramentas de automação e guias de sincronização para manter o seu projeto atualizado com o template original.
+
+### Como iniciar um novo projeto a partir do Stub:
+
+Para clonar e iniciar um novo projeto a partir da branch de stub, execute:
+
+```bash
+# 1. Clone a branch específica do stub
+git clone -b clean-project-AI-workflow --single-branch https://github.com/GuilianoRangel/UEG-CET-PROGWEB1-20261-monorepo-ueg.git meu-novo-projeto
+cd meu-novo-projeto
+
+# 2. Siga as instruções detalhadas no README.md da própria branch para inicializar o repositório git:
+#   - Opção A: Começar com histórico de commits limpo.
+#   - Opção B: Rastrear atualizações do template original usando o remote 'upstream' e o script de atualização.
+```
+
+Para mais detalhes e o guia completo de sincronização, consulte a branch `clean-project-AI-workflow` ou o arquivo `docs/template-update.md` contido nela.
+
+---
+
 ## 🛠️ Stack Tecnológico
 
 O ecossistema do monorepo é construído com as seguintes tecnologias de ponta:
